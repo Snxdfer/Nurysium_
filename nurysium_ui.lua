@@ -101,7 +101,7 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 	local UICorner = Instance.new("UICorner")
 	local UIStroke = Instance.new("UIStroke")
 	local BackgroundShadow = Instance.new("ImageLabel")
-	local Eye = Instance.new("ImageLabel")
+	local Star = Instance.new("ImageLabel")
 	local Background = Instance.new("Frame")
 	local UICorner_2 = Instance.new("UICorner")
 	local Sections = Instance.new("Frame")
@@ -167,17 +167,17 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 	BackgroundShadow.ScaleType = Enum.ScaleType.Slice
 	BackgroundShadow.SliceCenter = Rect.new(85, 85, 427, 427)
 
-	Eye.Name = "Eye"
-	Eye.Parent = uiVisible
-	Eye.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Eye.BackgroundTransparency = 1.000
-	Eye.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	Eye.BorderSizePixel = 0
-	Eye.Position = UDim2.new(0.239999995, 0, 0.239999995, 0)
-	Eye.Size = UDim2.new(0.5, 0, 0.5, 0)
-	Eye.ZIndex = 25
-	Eye.Image = "rbxassetid://17615525476"
-	Eye.ImageTransparency = 0.450
+	Star.Name = "Star"
+	Star.Parent = uiVisible
+	Star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Star.BackgroundTransparency = 1.000
+	Star.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Star.BorderSizePixel = 0
+	Star.Position = UDim2.new(0.239999995, 0, 0.239999995, 0)
+	Star.Size = UDim2.new(0.5, 0, 0.5, 0)
+	Star.ZIndex = 25
+	Star.Image = "rbxassetid://10734966248"
+	Star.ImageTransparency = 0.450
 
 	ui = Instance.new("ScreenGui", Main)
 
