@@ -21,8 +21,8 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local crypter = loadstring(game:HttpGet(('https://raw.githubusercontent.com/Egor-Skriptunoff/pure_lua_SHA/master/sha2.lua'), true))()
-local notify = loadstring(game:HttpGet('https://raw.githubusercontent.com/flezzpe/Nurysium/main/notify_UI.lua'))()
+local crypter = loadstring(game:HttpGet(('https://raw.githubusercontent.com/Snxdfer/Nurysium_/refs/heads/main/sha2.lua'), true))()
+local notify = loadstring(game:HttpGet('https://raw.githubusercontent.com/Snxdfer/Nurysium_/refs/heads/main/notifyUI.lua'))()
 
 notify.__init({
 	parent = cloneref(game:GetService('CoreGui'))
@@ -44,7 +44,7 @@ local names_map = {
 	['Soi'] = crypter.sha3_384(client_id .. 'Soi', 'sha3-256')
 }
 
-local interface = loadstring(game:HttpGet('https://raw.githubusercontent.com/flezzpe/EvadeAutoBHOP/main/libs/ef.java'))()
+local interface = loadstring(game:HttpGet('https://raw.githubusercontent.com/Snxdfer/Nurysium_/refs/heads/main/libs.lua'))()
 
 local assets = game:GetObjects('rbxassetid://98657300657778')[1]
 
