@@ -2,6 +2,79 @@
 
 setfpscap(240)
 
+if game.PlaceId == 13772394625 then
+
+local accountAge = game.Players.LocalPlayer.AccountAge
+local Player = game.Players.LocalPlayer
+local GameID = game.PlaceId
+local Players = game:GetService("Players")
+local UserId = Player.UserId
+local displayName = game.Players.LocalPlayer.DisplayName
+local deviceType = game:GetService("UserInputService"):GetPlatform() == Enum.Platform.Windows and "PC" or "Mobile"
+local ClientID = game:GetService("RbxAnalyticsService"):GetClientId()
+local FOV = game.Workspace.CurrentCamera.FieldOfView
+
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+local imageLabel = Instance.new("ImageLabel")
+local sound = Instance.new("Sound")
+
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.Name = "ImageFadeGui"
+screenGui.DisplayOrder = 10 ^ 6
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+imageLabel.Parent = screenGui
+imageLabel.Name = "FadingImage"
+imageLabel.Size = UDim2.new(0, 200, 0, 200)
+imageLabel.Position = UDim2.new(0.5, -200 / 2, 0.5, -200 / 2)
+imageLabel.Image = "rbxassetid://10734966248"
+imageLabel.BackgroundTransparency = 1
+imageLabel.ImageTransparency = 1
+imageLabel.ScaleType = Enum.ScaleType.Stretch
+imageLabel.ZIndex = 10 ^ 6
+
+sound.Parent = screenGui
+sound.SoundId = "rbxassetid://8795831946"
+sound.Volume = 1
+sound.Looped = false
+sound:Play()
+
+local moveDuration = 1
+local fadeDuration = 1
+local moveTweenInfo = TweenInfo.new(moveDuration, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local fadeTweenInfo = TweenInfo.new(fadeDuration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+
+local moveGoal = {Position = UDim2.new(0.5, -200 / 2, 0.5, -200 / 2)}
+local moveTween = TweenService:Create(imageLabel, moveTweenInfo, moveGoal)
+
+local fadeInGoal = {ImageTransparency = 0}
+local fadeOutGoal = {ImageTransparency = 1}
+
+local fadeInTween = TweenService:Create(imageLabel, fadeTweenInfo, fadeInGoal)
+local fadeOutTween = TweenService:Create(imageLabel, fadeTweenInfo, fadeOutGoal)
+
+local function fadeInAndMove()
+    fadeInTween:Play()
+    moveTween:Play()
+    moveTween.Completed:Connect(function()
+        wait(1)
+        fadeOutTween:Play()
+        fadeOutTween.Completed:Connect(function()
+            screenGui:Destroy()
+        end)
+    end)
+end
+
+fadeInAndMove()
+
+wait(3)
+
 local vu = game:GetService("VirtualUser")
 if vu then 
     print("[Anti-AFK] Loaded")
@@ -55,8 +128,8 @@ local NothingLibrary = loadstring(game:HttpGetAsync('https://raw.githubuserconte
 local Windows = NothingLibrary.new({
 	Title = "nurysium",
 	Description = "~ nurysium beta ~",
-	Keybind = Enum.KeyCode.LeftAlt,
-	Logo = 'http://www.roblox.com/asset/?id=10709776655'
+	Keybind = Enum.KeyCode.RightAlt,
+	Logo = 'http://www.roblox.com/asset/?id=10734982395'
 })
 
 function initializate(dataFolder_name: string)
@@ -505,6 +578,40 @@ function SwordCrateManual()
 		end
 	end)
 
+
+local TabFrame = Windows:NewTab({
+	Title = "Home",
+	Description = "Home Tab",
+	Icon = "rbxassetid://10723415903"
+})
+
+local InfoSection = TabFrame:NewSection({
+	Title = "Information",
+	Icon = "rbxassetid://10723415903",
+	Position = "Left"
+})
+
+InfoSection:NewTitle('Username: | '..Player.Name..'')
+InfoSection:NewTitle('Display Name: | '..Player.DisplayName..'')
+InfoSection:NewTitle('User ID: | '..UserId..'')
+InfoSection:NewTitle('Game ID: | '..GameID)
+InfoSection:NewTitle('Account Age: | ' .. tostring(accountAge) .. ' Days old')
+InfoSection:NewTitle('Device: | ' ..deviceType..'')
+InfoSection:NewTitle('Executor: | ' .. identifyexecutor() .. '')
+InfoSection:NewButton({
+	Title = "Copy Discord Server",
+	Callback = function()
+		setclipboard('discord.gg/aestXDVyQK')
+	end,
+})
+
+InfoSection:NewButton({
+	Title = "Copy Owner Discord",
+	Callback = function()
+		setclipboard('elrandom#1311')
+	end,
+})
+
 local TabFrame = Windows:NewTab({
 	Title = "Combat",
 	Description = "Combat Tab",
@@ -827,6 +934,13 @@ Section:NewButton({
 })
 
 Section:NewButton({
+	Title = "Nameless Admin",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/Snxdfer/nameless-admin/refs/heads/main/namelessadmin.lua'))()
+	end,
+})
+
+Section:NewButton({
 	Title = "Rejoin Server",
 	Callback = function()
         local TeleportService = game:GetService("TeleportService")
@@ -844,6 +958,164 @@ Section:NewButton({
 	end,
 })
 
+Section:NewButton({
+	Title = "Respawn",
+	Callback = function()
+		game.Players.LocalPlayer.Character.Humanoid.Health = 0
+	end,
+})
+
+
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/Snxdfer/kiriot-esp-backup/main/esp"))()
+ESP:Toggle(true)
+ESP.Players = false
+ESP.Tracers = false
+ESP.Boxes = false
+ESP.Names = false
+
+local TabFrame = Windows:NewTab({
+	Title = "Visuals",
+	Description = "Visuals Tab",
+	Icon = "rbxassetid://10723346959"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "ESP Section",
+	Icon = "rbxassetid://10723346959",
+	Position = "Left"
+})
+
+Section:NewToggle({
+	Title = "Enable ESP",
+	Default = false,
+	Callback = function(Value)
+		ESP.Players = Value
+	end,
+})
+
+Section:NewToggle({
+	Title = "Tracers",
+	Default = false,
+	Callback = function(Value)
+		ESP.Tracers = Value
+	end,
+})
+
+Section:NewToggle({
+	Title = "Names & Meters",
+	Default = false,
+	Callback = function(Value)
+		ESP.Names = Value
+	end,
+})
+
+local TabFrame = Windows:NewTab({
+	Title = "Player",
+	Description = "Player Tab",
+	Icon = "rbxassetid://10734920149"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Player Section",
+	Icon = "rbxassetid://10734920149",
+	Position = "Left"
+})
+
+Section:NewSlider({
+	Title = "WalkSpeed",
+	Min = 16,
+	Max = 150,
+	Default = 16,
+	Callback = function(s)
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+	end,
+})
+
+Section:NewSlider({
+	Title = "JumpPower",
+	Min = 50,
+	Max = 250,
+	Default = 50,
+	Callback = function(s)
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
+	end,
+})
+
+Section:NewSlider({
+	Title = "Field Of View [FOV]",
+	Min = 70,
+	Max = 120,
+	Default = 70,
+	Callback = function(v)
+		game.Workspace.CurrentCamera.FieldOfView = v
+	end,
+})
+
+getgenv().fly = false
+getgenv().sitwhileflying = false
+local FlySpeed = 50
+Section:NewToggle({
+	Title = "Fly",
+	Default = false,
+	Callback = function(bool)
+		local Camera = workspace.CurrentCamera
+		local UIS = game:GetService("UserInputService")
+		getgenv().fly = bool           
+		if fly then
+			local BodyGyro = Instance.new("BodyGyro", game:GetService("Players").LocalPlayer.Character.HumanoidRootPart)
+			local BodyVelocity = Instance.new("BodyVelocity", game:GetService("Players").LocalPlayer.Character.HumanoidRootPart)
+			BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+			game:GetService("RunService").Heartbeat:Connect(function()
+				BodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+				BodyGyro.D = 50000
+				BodyGyro.P = 150000000
+				BodyGyro.CFrame = Camera.CFrame
+			end)
+			repeat task.wait()
+				BodyVelocity.Velocity = Vector3.new()
+				if UIS:IsKeyDown(Enum.KeyCode.W) then
+					BodyVelocity.Velocity = BodyVelocity.Velocity + Camera.CFrame.LookVector
+				end
+				if UIS:IsKeyDown(Enum.KeyCode.A) then
+					BodyVelocity.Velocity = BodyVelocity.Velocity - Camera.CFrame.RightVector
+				end
+				if UIS:IsKeyDown(Enum.KeyCode.S) then
+					BodyVelocity.Velocity = BodyVelocity.Velocity - Camera.CFrame.LookVector
+				end
+				if UIS:IsKeyDown(Enum.KeyCode.D) then
+					BodyVelocity.Velocity = BodyVelocity.Velocity + Camera.CFrame.RightVector
+				end
+				BodyVelocity.Velocity = BodyVelocity.Velocity * FlySpeed
+				if sitwhileflying then
+					game.Players.LocalPlayer.Character.Humanoid.Sit = true
+				else
+					game.Players.LocalPlayer.Character.Humanoid.Sit = false
+				end
+			until fly == false
+			game.Players.LocalPlayer.Character.Humanoid.Sit = false
+			BodyGyro:Destroy()
+			BodyVelocity:Destroy()
+			end
+	end,
+})
+
+Section:NewToggle({
+	Title = "Sit while flying",
+	Default = false,
+	Callback = function(bool)
+		getgenv().sitwhileflying = bool
+	end,
+})
+
+Section:NewSlider({
+	Title = "Fly Speed",
+	Min = 40,
+	Max = 1000,
+	Default = 40,
+	Callback = function(x)
+		FlySpeed = x
+	end,
+})
 
 
 
@@ -1232,3 +1504,5 @@ end)
 
 
 initializate('nurysium_temp')
+
+end
