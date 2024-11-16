@@ -1,6 +1,4 @@
---[[
-	nurysium beta 2
-]]
+-- nurysium beta 2
 
 setfpscap(240)
 
@@ -1054,26 +1052,6 @@ local Section = TabFrame:NewSection({
 	Title = "Player Section",
 	Icon = "rbxassetid://10734920149",
 	Position = "Left"
-})
-
-Section:NewSlider({
-	Title = "WalkSpeed",
-	Min = 16,
-	Max = 150,
-	Default = 16,
-	Callback = function(s)
-		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-	end,
-})
-
-Section:NewSlider({
-	Title = "JumpPower",
-	Min = 50,
-	Max = 250,
-	Default = 50,
-	Callback = function(s)
-		game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
-	end,
 })
 
 Section:NewSlider({
