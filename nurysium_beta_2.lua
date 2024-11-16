@@ -14,8 +14,6 @@ end
 local version = '0.4.0'
 print(version)
 
-setfpscap(240)
-
 local Stats = game:GetService('Stats')
 local Players = game:GetService('Players')
 local RunService = game:GetService('RunService')
@@ -680,6 +678,68 @@ Section:NewButton({
 	end,
 })
 
+local Section = TabFrame:NewSection({
+	Title = "Troll Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Right"
+})
+
+local speaker = game.Players.LocalPlayer
+local spinSpeed = 20
+local isSpinning = false
+
+local function getRoot(character)
+    return character and character:FindFirstChild("HumanoidRootPart")
+end
+
+Section:NewToggle({
+	Title = "Spin",
+	Default = false,
+	Callback = function(state)
+		isSpinning = state
+		if state then
+			for _, v in pairs(getRoot(speaker.Character):GetChildren()) do
+				if v.Name == "Spinning" then
+					v:Destroy()
+				end
+			end
+			
+			local Spin = Instance.new("BodyAngularVelocity")
+			Spin.Name = "Spinning"
+			Spin.Parent = getRoot(speaker.Character)
+			Spin.MaxTorque = Vector3.new(0, math.huge, 0)
+			Spin.AngularVelocity = Vector3.new(0, spinSpeed, 0)
+		else
+			for _, v in pairs(getRoot(speaker.Character):GetChildren()) do
+				if v.Name == "Spinning" then
+					v:Destroy()
+				end
+			end
+		end
+	end,
+})
+
+Section:NewSlider({
+	Title = "Spin Speed",
+	Min = 20,
+	Max = 100,
+	Default = 20,
+	Callback = function(speed)
+		local numSpeed = tonumber(speed)
+        if numSpeed then
+            spinSpeed = numSpeed
+            
+            if isSpinning then
+                for _, v in pairs(getRoot(speaker.Character):GetChildren()) do
+                    if v.Name == "Spinning" then
+                        v.AngularVelocity = Vector3.new(0, spinSpeed, 0)
+                    end
+                end
+            end
+        end
+	end,
+})
+
 local TabFrame = Windows:NewTab({
 	Title = "Crates",
 	Description = "Crates Tab",
@@ -721,6 +781,73 @@ Section:NewToggle({
 		getgenv().AEC = state
 	end,
 })
+
+local TabFrame = Windows:NewTab({
+	Title = "Others",
+	Description = "Others Tab",
+	Icon = "rbxassetid://10723423881"
+})
+
+local Section = TabFrame:NewSection({
+	Title = "FPS Section",
+	Icon = "rbxassetid://10723423881",
+	Position = "Left"
+})
+
+Section:NewButton({
+	Title = "Unlock FPS Cap",
+	Callback = function()
+		setfpscap(FpsCap)
+	end,
+})
+
+Section:NewSlider({
+	Title = "FPS",
+	Min = 5,
+	Max = 240,
+	Default = 60,
+	Callback = function(Value)
+		FpsCap = Value
+	end,
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Others Section",
+	Icon = "rbxassetid://10723423881",
+	Position = "Right"
+})
+
+Section:NewButton({
+	Title = "Infinite Yield FE",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+	end,
+})
+
+Section:NewButton({
+	Title = "Rejoin Server",
+	Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+	end,
+})
+
+Section:NewButton({
+	Title = "Console [F9]",
+	Callback = function()
+		game.StarterGui:SetCore("DevConsoleVisible", true)
+	end,
+})
+
+
+
+
+
+
+
 
 
 
