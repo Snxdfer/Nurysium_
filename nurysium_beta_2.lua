@@ -1,5 +1,7 @@
 -- nurysium beta 2
 
+setfpscap(240)
+
 local vu = game:GetService("VirtualUser")
 if vu then 
     print("[Anti-AFK] Loaded")
