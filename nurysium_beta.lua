@@ -515,19 +515,6 @@ library:create_toggle("Clash UI", "Combat", function(Value)
 	Spam.Enabled = Value
 end)
 
-local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
-library:create_toggle("Fake Platform", "Combat", function(Value)
-    FakePlatform = Value
-
-    local humanoid = character:WaitForChild("Humanoid")
-
-    if FakePlatform then
-        humanoid.HipHeight = 50
-	else
-        humanoid.HipHeight = 0
-    end
-end)
-
 library:create_toggle("Hit Effect", "World", function(toggled)
 	getgenv().hit_effect_Enabled = toggled
 end)
