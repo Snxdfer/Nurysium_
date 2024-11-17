@@ -4,6 +4,8 @@ setfpscap(240)
 
 if game.PlaceId == 13772394625 then
 
+	writefile("nurysium_beta.txt", "getgenv.Load_Nurysium = true")
+
 local accountAge = game.Players.LocalPlayer.AccountAge
 local Player = game.Players.LocalPlayer
 local GameID = game.PlaceId
@@ -13,67 +15,6 @@ local displayName = game.Players.LocalPlayer.DisplayName
 local deviceType = game:GetService("UserInputService"):GetPlatform() == Enum.Platform.Windows and "PC" or "Mobile"
 local ClientID = game:GetService("RbxAnalyticsService"):GetClientId()
 local FOV = game.Workspace.CurrentCamera.FieldOfView
-
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
-local Workspace = game:GetService("Workspace")
-local CoreGui = game:GetService("CoreGui")
-
-local player = game.Players.LocalPlayer
-local screenGui = Instance.new("ScreenGui")
-local imageLabel = Instance.new("ImageLabel")
-local sound = Instance.new("Sound")
-
-screenGui.Parent = player:WaitForChild("PlayerGui")
-screenGui.Name = "ImageFadeGui"
-screenGui.DisplayOrder = 10 ^ 6
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-imageLabel.Parent = screenGui
-imageLabel.Name = "FadingImage"
-imageLabel.Size = UDim2.new(0, 200, 0, 200)
-imageLabel.Position = UDim2.new(0.5, -200 / 2, 0.5, -200 / 2)
-imageLabel.Image = "rbxassetid://10734966248"
-imageLabel.BackgroundTransparency = 1
-imageLabel.ImageTransparency = 1
-imageLabel.ScaleType = Enum.ScaleType.Stretch
-imageLabel.ZIndex = 10 ^ 6
-
-sound.Parent = screenGui
-sound.SoundId = "rbxassetid://8795831946"
-sound.Volume = 1
-sound.Looped = false
-sound:Play()
-
-local moveDuration = 1
-local fadeDuration = 1
-local moveTweenInfo = TweenInfo.new(moveDuration, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-local fadeTweenInfo = TweenInfo.new(fadeDuration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-
-local moveGoal = {Position = UDim2.new(0.5, -200 / 2, 0.5, -200 / 2)}
-local moveTween = TweenService:Create(imageLabel, moveTweenInfo, moveGoal)
-
-local fadeInGoal = {ImageTransparency = 0}
-local fadeOutGoal = {ImageTransparency = 1}
-
-local fadeInTween = TweenService:Create(imageLabel, fadeTweenInfo, fadeInGoal)
-local fadeOutTween = TweenService:Create(imageLabel, fadeTweenInfo, fadeOutGoal)
-
-local function fadeInAndMove()
-    fadeInTween:Play()
-    moveTween:Play()
-    moveTween.Completed:Connect(function()
-        wait(1)
-        fadeOutTween:Play()
-        fadeOutTween.Completed:Connect(function()
-            screenGui:Destroy()
-        end)
-    end)
-end
-
-fadeInAndMove()
-
-wait(3)
 
 local vu = game:GetService("VirtualUser")
 if vu then 
@@ -697,7 +638,7 @@ local Section = TabFrame:NewSection({
 
 Section:NewDropdown({
 	Title = "Sound:",
-	Data = {'DC-15X','Ring','Minecraft','Shoot','Teamfortress Bell'},
+	Data = {'DC-15X','Ring','Minecraft','Shoot','Teamfortress Bell','Cute Sound','Butterfly Bow','Nebula Sword','Glory','Dual Scythe','Dual Runic Blade'},
 	Default = '',
 	Callback = function(selected)
 
@@ -711,6 +652,18 @@ Section:NewDropdown({
             setHitSound('rbxassetid://8255306220')
         elseif selected == "Teamfortress Bell" then
             setHitSound('rbxassetid://2868331684')
+		elseif selected == "Cute Sound" then
+            setHitSound('rbxassetid://15454079252')
+		elseif selected == "Butterfly Bow" then
+            setHitSound('rbxassetid://139582047047535')
+		elseif selected == "Nebula Sword" then
+            setHitSound('rbxassetid://15600280908')
+		elseif selected == "Glory" then
+            setHitSound('rbxassetid://16008607942')
+		elseif selected == "Dual Scythe" then
+            setHitSound('rbxassetid://16008802983')
+		elseif selected == "Dual Runic Blade" then
+            setHitSound('rbxassetid://17607592603')
         end
 
         getgenv().hit_sound_Enabled = true
@@ -1004,6 +957,72 @@ Section:NewButton({
 	end,
 })
 
+Section:NewButton({
+	Title = "Keystrokes [Draggable]",
+	Callback = function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/aXC5KJuj"))()
+	end,
+})
+
+local Section = TabFrame:NewSection({
+	Title = "Music Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Left"
+})
+
+local MusicToggle = false
+local currentSound = nil
+local pausedPosition = 0
+local MusicId = "16190782181"
+
+local function playMusic()
+    if MusicToggle and MusicId then
+        if currentSound then
+            currentSound:Stop()
+            currentSound:Destroy()
+        end
+        currentSound = Instance.new("Sound", game.Workspace)
+        currentSound.SoundId = "rbxassetid://" .. MusicId
+        currentSound.TimePosition = pausedPosition
+        currentSound.Looped = true
+        currentSound:Play()
+        currentSound.Ended:Connect(function()
+            currentSound.TimePosition = 0
+            currentSound:Play()
+        end)
+    end
+end
+
+Section:NewToggle({
+    Title = "Play Music",
+    Default = false,
+    Callback = function(state)
+        MusicToggle = state
+        if MusicToggle then
+            playMusic()
+        else
+            if currentSound then
+                pausedPosition = currentSound.TimePosition
+                currentSound:Stop()
+            end
+        end
+    end,
+})
+
+Section:NewToggle({
+    Title = "Loop Music",
+    Default = false,
+    Callback = function(state)
+        if currentSound then
+            if state then
+                currentSound.Looped = true
+            else
+                currentSound.Looped = false
+            end
+        end
+    end,
+})
+
 
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/Snxdfer/kiriot-esp-backup/main/esp"))()
 ESP:Toggle(true)
@@ -1061,10 +1080,31 @@ local Section = TabFrame:NewSection({
 })
 
 Section:NewSlider({
+	Title = "WalkSpeed",
+	Min = 36,
+	Max = 150,
+	Default = 36,
+	Callback = function(s)
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+	end,
+})
+
+Section:NewSlider({
+	Title = "Gravity",
+	Min = 0,
+	Max = 195,
+	Default = 195,
+	Callback = function(Value)
+		setgravity = Value
+		game.Workspace.Gravity = Value
+	end,
+})
+
+Section:NewSlider({
 	Title = "Field Of View [FOV]",
-	Min = 70,
+	Min = 80,
 	Max = 120,
-	Default = 70,
+	Default = 80,
 	Callback = function(v)
 		game.Workspace.CurrentCamera.FieldOfView = v
 	end,
