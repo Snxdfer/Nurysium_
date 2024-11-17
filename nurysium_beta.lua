@@ -1,5 +1,11 @@
 -- Nurysium beta v0.4.0
 
+setfpscap(240)
+
+if game.PlaceId == 13772394625 then
+
+	writefile("nurysium.txt", "getgenv.nurysium = true")
+
 local vu = game:GetService("VirtualUser")
 if vu then 
     print("[Anti-AFK] Loaded")
@@ -15,8 +21,6 @@ loadstring(game:HttpGet("https://pastebin.com/raw/K2MGyDaS"))()
 
 local version = '0.4.0'
 print(version)
-
-setfpscap(240)
 
 local Stats = game:GetService('Stats')
 local Players = game:GetService('Players')
@@ -502,7 +506,7 @@ library:create_toggle("Attack Aura", "Combat", function(toggled)
 	getgenv().aura_Enabled = toggled
 end)
 
-library:create_toggle("AI & Auto Parry", "Combat", function(toggled)
+library:create_toggle("AI", "Combat", function(toggled)
 	resolve_parry_Remote()
 	getgenv().ai_Enabled = toggled
 end)
@@ -953,3 +957,5 @@ end)
 
 
 initializate('nurysium_temp')
+
+end
