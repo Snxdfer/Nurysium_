@@ -578,6 +578,37 @@ function SwordCrateManual()
 		end
 	end)
 
+	spawn(function()
+		local TweenService = game:GetService("TweenService")
+		local plr = game.Players.LocalPlayer
+		local Ball = workspace:WaitForChild("Balls")
+		local currentTween = nil
+	
+		while true do
+			wait(0.001)
+			if getgenv().FB then
+				local ball = Ball:FindFirstChildOfClass("Part")
+				local char = plr.Character
+				if ball and char then
+					local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, false, 0)
+					local distance = (char.PrimaryPart.Position - ball.Position).magnitude
+					if distance <= 1000 then 
+						if currentTween then
+							currentTween:Pause()
+						end
+						currentTween = TweenService:Create(char.PrimaryPart, tweenInfo, {CFrame = ball.CFrame})
+						currentTween:Play()
+					end
+				end
+			else
+				if currentTween then
+					currentTween:Pause()
+					currentTween = nil
+				end
+			end
+		end
+	end)
+
 
 local TabFrame = Windows:NewTab({
 	Title = "Home",
@@ -625,7 +656,7 @@ local Section = TabFrame:NewSection({
 })
 
 Section:NewToggle({
-	Title = "AI & Auto Parry",
+	Title = "AI",
 	Default = false,
 	Callback = function(toggled)
 		resolve_parry_Remote()
@@ -634,7 +665,7 @@ Section:NewToggle({
 })
 
 Section:NewToggle({
-	Title = "Attack Aura",
+	Title = "Attack Aura [Auto Parry]",
 	Default = false,
 	Callback = function(toggled)
 		resolve_parry_Remote()
@@ -752,6 +783,14 @@ Section:NewToggle({
 	Default = false,
 	Callback = function(toggled)
 		getgenv().spectate_Enabled = toggled
+	end,
+})
+
+Section:NewToggle({
+	Title = "Follow Ball [USE ONLY IN GAME]",
+	Default = false,
+	Callback = function(toggled)
+		getgenv().FB = toggled
 	end,
 })
 
