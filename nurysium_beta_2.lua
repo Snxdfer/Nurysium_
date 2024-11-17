@@ -16,6 +16,7 @@ local deviceType = game:GetService("UserInputService"):GetPlatform() == Enum.Pla
 local ClientID = game:GetService("RbxAnalyticsService"):GetClientId()
 local FOV = game.Workspace.CurrentCamera.FieldOfView
 
+--<>----<>----<>----< Anti-AFK >----<>----<>----<>--
 local vu = game:GetService("VirtualUser")
 if vu then 
     print("[Anti-AFK] Loaded")
