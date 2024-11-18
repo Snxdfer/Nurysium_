@@ -966,6 +966,27 @@ Section:NewButton({
 })
 
 local Section = TabFrame:NewSection({
+	Title = "Server Section",
+	Icon = "rbxassetid://7743869054",
+	Position = "Right"
+})
+
+local TeleportService = game:GetService("TeleportService")
+Section:NewButton({
+	Title = "Mobile Server",
+	Callback = function(Teleport)
+    local Player = game.Players.LocalPlayer
+    local placeId = 15509350986
+
+    local function teleportPlayer()
+    TeleportService:Teleport(placeId, Player)
+    end
+
+    teleportPlayer()
+	end,
+})
+
+local Section = TabFrame:NewSection({
 	Title = "Music Section",
 	Icon = "rbxassetid://7743869054",
 	Position = "Left"
