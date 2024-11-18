@@ -1,4 +1,4 @@
-local nurysium = {}
+local glitter = {}
 
 local tween_service = game:GetService("TweenService")
 local user_input = game:GetService("UserInputService")
@@ -29,7 +29,7 @@ local function animate_elements(speed: number)
 	}):Play()
 end
 
-function nurysium: open()
+function glitter: open()
 	tween_service:Create(color_shader, TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
 		Saturation = -1
 	}):Play()
@@ -60,7 +60,7 @@ function nurysium: open()
 end
 
 
-function nurysium: close()
+function glitter: close()
 	tween_service:Create(color_shader, TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
 		Saturation = 0
 	}):Play()
@@ -90,7 +90,7 @@ function nurysium: close()
 	}):Play()
 end
 
-function nurysium: init(name: string, is_draggable: boolean, parent)
+function glitter: init(name: string, is_draggable: boolean, parent)
 	if parent:FindFirstChild(name) then
 		parent:FindFirstChild(name):Destroy()
 	end
@@ -181,7 +181,7 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 
 	ui = Instance.new("ScreenGui", Main)
 
-	ui.Name = 'nurysium'
+	ui.Name = 'glitter'
 	ui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	
 	local girl_Image = Instance.new("Frame")
@@ -480,13 +480,13 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 	task.defer(function()
 		uiVisible.TouchTap:Connect(function()
 			if not ui.Enabled then
-				nurysium:open()
+				glitter:open()
 
 				task.delay(0.15, function()
 					ui.Enabled = true
 				end)
 			else
-				nurysium:close()
+				glitter:close()
 
 				task.delay(1, function()
 					ui.Enabled = false
@@ -496,13 +496,13 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 
 		uiVisible.MouseButton1Up:Connect(function()
 			if not ui.Enabled then
-				nurysium:open()
+				glitter:open()
 
 				task.delay(0.15, function()
 					ui.Enabled = true
 				end)
 			else
-				nurysium:close()
+				glitter:close()
 
 				task.delay(1, function()
 					ui.Enabled = false
@@ -514,13 +514,13 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 			if not is_event and (input.KeyCode == Enum.KeyCode.RightShift or input.KeyCode == Enum.KeyCode.Insert)  then
 
 				if not ui.Enabled then
-					nurysium:open()
+					glitter:open()
 
 					task.delay(0.15, function()
 						ui.Enabled = true
 					end)
 				else
-					nurysium:close()
+					glitter:close()
 
 					task.delay(1, function()
 						ui.Enabled = false
@@ -531,7 +531,7 @@ function nurysium: init(name: string, is_draggable: boolean, parent)
 	end)
 end
 
-function nurysium: create_section(name: string, imageID: number)
+function glitter: create_section(name: string, imageID: number)
 	task.wait(0.1)
 
 	local Example = Instance.new("TextButton", ui.Background.Sections.real_sections)
@@ -630,7 +630,7 @@ function nurysium: create_section(name: string, imageID: number)
 	tween_service:Create(ImageLabel, TweenInfo.new(3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.45}):Play()
 end
 
-function nurysium: create_toggle(name: string, section_name: string, callback)
+function glitter: create_toggle(name: string, section_name: string, callback)
 	task.wait(0.1)
 
 	callback = callback or function() end
