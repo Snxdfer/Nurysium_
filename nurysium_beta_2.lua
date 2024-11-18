@@ -665,6 +665,8 @@ Section:NewDropdown({
             setHitSound('rbxassetid://16008802983')
 		elseif selected == "Dual Runic Blade" then
             setHitSound('rbxassetid://17607592603')
+		elseif selected == "Sword Parry" then
+            setHitSound('rbxassetid://5763723309')
         end
 
         getgenv().hit_sound_Enabled = true
@@ -1101,6 +1103,83 @@ local Section = TabFrame:NewSection({
 	Position = "Left"
 })
 
+getgenv().Multiplier = 0.5
+local isWalking = false
+
+Section:NewToggle({
+    Title = "CFrame Walk",
+    Default = false,
+    Callback = function(state)
+        repeat
+            wait()
+        until game:IsLoaded()
+
+        local Players = game:service('Players')
+        local LocalPlayer = Players.LocalPlayer
+
+        repeat
+            wait()
+        until LocalPlayer.Character
+
+        local UserInputService = game:service('UserInputService')
+        local RunService = game:service('RunService')
+
+        UserInputService.InputBegan:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.LeftBracket then
+                getgenv().Multiplier = getgenv().Multiplier + 0.01
+                print("Multiplier: " .. getgenv().Multiplier)
+                wait(0.2)
+                
+                while UserInputService:IsKeyDown(Enum.KeyCode.LeftBracket) do
+                    wait()
+                    getgenv().Multiplier = getgenv().Multiplier + 0.01
+                    print("Multiplier: " .. getgenv().Multiplier)
+                end
+            end
+
+            if input.KeyCode == Enum.KeyCode.RightBracket then
+                getgenv().Multiplier = getgenv().Multiplier - 0.01
+                print("Multiplier: " .. getgenv().Multiplier)
+                wait(0.2)
+
+                while UserInputService:IsKeyDown(Enum.KeyCode.RightBracket) do
+                    wait()
+                    getgenv().Multiplier = getgenv().Multiplier - 0.01
+                    print("Multiplier: " .. getgenv().Multiplier)
+                end
+            end
+        end)
+
+        if state then
+            isWalking = true
+            spawn(function()
+                while isWalking do
+                    local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+                    
+                    if humanoidRootPart and humanoid then
+                        humanoidRootPart.CFrame = humanoidRootPart.CFrame + humanoid.MoveDirection * getgenv().Multiplier
+                    end
+                    RunService.Stepped:wait()
+                end
+            end)
+        else
+            isWalking = false
+        end
+    end,
+})
+
+Section:NewSlider({
+    Title = "CFrame Speed",
+    Min = 1,
+    Max = 5,
+    Default = 1,
+    Callback = function(s)
+        getgenv().Multiplier = s
+    end,
+})
+
+
 Section:NewSlider({
 	Title = "WalkSpeed",
 	Min = 36,
@@ -1124,9 +1203,9 @@ Section:NewSlider({
 
 Section:NewSlider({
 	Title = "Field Of View [FOV]",
-	Min = 80,
+	Min = 70,
 	Max = 120,
-	Default = 80,
+	Default = 70,
 	Callback = function(v)
 		game.Workspace.CurrentCamera.FieldOfView = v
 	end,
